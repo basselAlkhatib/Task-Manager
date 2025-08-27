@@ -2,6 +2,11 @@
 
 namespace App\Models;
 
+/**
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Task[] $tasks
+ * @method \Illuminate\Database\Eloquent\Relations\HasMany tasks()
+ */
+
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,7 +17,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable , HasApiTokens;
+    use HasFactory, Notifiable, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -56,5 +61,10 @@ class User extends Authenticatable
     public function tasks()
     {
         return $this->hasMany(Task::class);
+    }
+
+    public function favoriteTasks()
+    {
+        return $this->belongsToMany(Task::class, 'favorites');
     }
 }
