@@ -27,20 +27,28 @@ class ProfileController extends Controller
         return response()->json($profile, 200);
     }
     public function store(StoreProfileRequest $request)
-    {
-        $user_id = Auth::user()->id;
-        $ValidatedData = $request->validated();
-        $ValidatedData['user_id'] = $user_id;
-        $profile = Profile::create($ValidatedData);
+{
+    $user_id = Auth::id(); // shorter syntax
 
-        return response()->json(
-            [
-                'message' => 'Profile Created Successfuly',
-                'profile' => $profile
-            ],
-            201
-        );
+    $validatedData = $request->validated();
+    $validatedData['user_id'] = $user_id;
+
+    if ($request->hasFile('image')) {
+        $path = $request->file('image')->store('my_photo', 'public');
+        $validatedData['image'] = $path; // ✅ add image before insert
+    } else {
+        return response()->json(['error' => 'Image is required'], 422);
     }
+
+    $profile = Profile::create($validatedData);
+
+    return response()->json([
+        'message' => 'Profile Created Successfully',
+        'profile' => $profile
+    ], 201);
+}
+
+
     public function update(UpdateProfileRequest $request, $id)
     {
         $user_id = Auth::user()->id;
