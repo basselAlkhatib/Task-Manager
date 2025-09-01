@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
+
 use App\Models\User;
 //use Dotenv\Exception\ValidationException;
 use Illuminate\Http\Request;
@@ -95,5 +97,12 @@ class UserController extends Controller
     {
         $tasks = User::find($id)->tasks;
         return response()->json($tasks, 200);
+    }
+
+    public function GetUser()
+    {
+        $user_id = Auth::user()->id;
+        $userData = User::with('profile')->findOrFail($user_id);
+        return new UserResource($userData);
     }
 }

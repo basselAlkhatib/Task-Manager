@@ -18,11 +18,11 @@ class TaskController extends Controller
         return response()->json(['message' => 'Task added to favorites'], 200);
     }
 
-        public function removeFromFavorite($taskId)
-        {
-            Auth::user()->favoriteTasks()->detach($taskId);
-            return response()->json(['message' => 'Task removed from favorites'], 200);
-        }
+    public function removeFromFavorite($taskId)
+    {
+        Auth::user()->favoriteTasks()->detach($taskId);
+        return response()->json(['message' => 'Task removed from favorites'], 200);
+    }
     public function getFavoriteTasks()
     {
         $favorites = Auth::user()->favoriteTasks()->get();
