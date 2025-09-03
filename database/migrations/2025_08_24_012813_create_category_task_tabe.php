@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('category_task', function (Blueprint $table) {
             $table->id();
+            $table->unique(['task_id','category_id']);
             $table->foreignId('task_id')->constrained('tasks')->cascadeOnDelete();
             $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
             $table->timestamps();

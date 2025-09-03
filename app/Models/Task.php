@@ -7,9 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
 {
-    protected $fillable = ['title', 'description', 'priority', 'user_id'];
     use HasFactory;
-    protected $talbe = 'tasks';
+
+    protected $table = 'tasks';
+
+    protected $fillable = ['title', 'description', 'priority', 'user_id'];
 
     public function user()
     {
@@ -20,8 +22,9 @@ class Task extends Model
     {
         return $this->belongsToMany(Category::class, 'category_task');
     }
+
     public function favoriteByUser()
     {
-        return $this->belongsToMany(Task::class, 'favorites');
+        return $this->belongsToMany(User::class, 'favorites', 'task_id', 'user_id');
     }
 }

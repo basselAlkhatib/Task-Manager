@@ -42,12 +42,18 @@ class TaskController extends Controller
     public function addCategoriesToTask(Request $request, $taskId)
     {
         $request->validate([
-            'category_id' => 'required|integer|exists:categories,id',
+            'category_id' => 'required|array',
+            'category_id.*' => 'integer|exists:categories,id',
         ]);
+
         $task = Task::findOrFail($taskId);
-        $task->categories()->attach($request->category_id);
-        return response()->json('category attached sucessfuly', 200);
+
+        // Avoid duplicates
+        $task->categories()->syncWithoutDetaching($request->category_id);
+
+        return response()->json(['message' => 'Categories attached successfully'], 200);
     }
+
 
     public function getTaskByPriority()
     {

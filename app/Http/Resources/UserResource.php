@@ -19,7 +19,7 @@ class UserResource extends JsonResource
                 'id' => $this->id,
                 'name' => $this->name,
                 'email' => $this->email,
-                'created_at' => $this->created_at->format('Y-m-d'),
+                'created_at' => $this->created_at->format('Y-M-D'),
                 'profile' => new ProfileResource($this->whenLoaded('profile'))
             ];
     }
