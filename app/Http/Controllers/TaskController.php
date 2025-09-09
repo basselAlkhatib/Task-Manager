@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Task;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -109,16 +112,28 @@ class TaskController extends Controller
         return response()->json($task, 200);
     }
 
+
     public function destroy($id)
     {
         $user_id = Auth::user()->id;
-        $task = Task::findOrFail($id);
-        if ($task->user_id != $user_id) {
-            return response()->json(['message' => 'UnAuthraized', 403]);
+
+        try {
+            $task = Task::findOrFail($id);
+
+            // Check if the authenticated user owns the task
+            if ($task->user_id != $user_id) {
+                return response()->json(['error' => 'Unauthorized'], 403);
+            }
+
+            $task->delete();
+            return response()->json(['message' => 'Task Deleted Successfully'], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'Task Not Found'], 404);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Something went wrong', 'details' => $e->getMessage()], 500);
         }
-        $task->delete();
-        return response()->json(null, 204);
     }
+
 
     public function getTaskUser($id)
     {
