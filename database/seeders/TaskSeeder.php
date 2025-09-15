@@ -2,18 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use GuzzleHttp\Promise\Create;
+use App\Models\Task;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class UserSeeder extends Seeder
+class TaskSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        User::factory( )->count(50)->Create();
+        Task::factory()->count(20)->create();
     }
 }
